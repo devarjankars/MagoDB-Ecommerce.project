@@ -1,30 +1,29 @@
-const mongodb=require('mongodb');
-const mongodb=require('mongodb');
-
-
+const mongodb = require('mongodb');
+const MongoClient = mongodb.MongoClient;
 
 let _db;
-const MangoConnect=(callback)=>{const mangoClient=mongodb.MongoClient;
 
-  mangoClient.connect(`${process.env.Db_path}`)
-  .then(result=>{
-    console.log("connected");
-    _db=result.db();
-  
-  callback(result);
-  })
-  .catch(err=>{
-    console.log(err);
-    throw err;
-  })
-}
-const getDb=()=>{
-  if(_db) {
+const mongoConnect = callback => {
+  MongoClient.connect(
+    'mongodb+srv://devarjankars:hqWCb6QMDKf5Lem3@cluster0.uw4o3ie.mongodb.net/shop?retryWrites=true'
+  )
+    .then(client => {
+      console.log('Connected!');
+      _db = client.db();
+      callback();
+    })
+    .catch(err => {
+      console.log(err);
+      throw err;
+    });
+};
+
+const getDb = () => {
+  if (_db) {
     return _db;
   }
-  throw 'no databse connection'
-}
+  throw 'No database found!';
+};
 
-
-module.exports =MangoConnect;
-module.exports=getDb;
+exports.mongoConnect = mongoConnect;
+exports.getDb = getDb;
